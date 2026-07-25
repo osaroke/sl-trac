@@ -1,31 +1,20 @@
-// Minimal localStorage-backed storage, mirroring the get/set/delete shape
-// used by the original prototype so App.jsx needs no logic changes.
-const PREFIX = 'sleep-tracker:';
-
-export const storage = {
-  async get(key) {
-    try {
-      const raw = localStorage.getItem(PREFIX + key);
-      if (raw === null) return null;
-      return { key, value: raw, shared: false };
-    } catch (e) {
-      return null;
-    }
+{
+  "name": "sleep-tracker-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  async set(key, value) {
-    try {
-      localStorage.setItem(PREFIX + key, value);
-      return { key, value, shared: false };
-    } catch (e) {
-      return null;
-    }
+  "dependencies": {
+    "lucide-react": "^0.383.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
-  async delete(key) {
-    try {
-      localStorage.removeItem(PREFIX + key);
-      return { key, deleted: true, shared: false };
-    } catch (e) {
-      return null;
-    }
-  },
-};
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0"
+  }
+}

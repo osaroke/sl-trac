@@ -1,23 +1,83 @@
-<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>睡眠記録</title>
+# 睡眠記録アプリ (Sleep Tracker)
 
-    <!-- iOS home-screen / PWA -->
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="睡眠記録" />
-    <meta name="theme-color" content="#0A0F1E" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-  </head>
-  <body style="margin:0; background:#0A0F1E; overscroll-behavior:none;">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+ワンタップで就寝・起床を記録できるシンプルな睡眠トラッカー。詳細な入力（睡眠の質・気になったこと・メモ）や手動追加にも対応しています。星座モチーフの4人のキャラクターが、直近の睡眠状況に応じてコメントしてくれます。
+
+## 主な機能
+
+- ワンタップで就寝/起床を記録。バックグラウンドでも計測を継続
+- 起床時のクイック評価（星5段階・タグ・メモ）
+- 手動での記録追加・編集・削除
+- 「眠りのダイヤル」による前夜の睡眠の可視化
+- 直近7件の平均睡眠時間グラフ
+- 4人のキャラクター（すぴか・こと・すばる・こぐま）による応援コメント
+  - 記録内容（連続達成日数・睡眠時間・起床時刻など）に応じてセリフが変化
+  - 隠しイベント: 記録の節目（7/30/100日）、久しぶりの再開、パーフェクトウィーク、徹夜検知、正午起き、深夜スタート、ぴったり睡眠時間 など
+- 目標睡眠時間の設定（歯車アイコンから）
+  - 目標の就寝時刻・起床時刻を指定（睡眠時間のプリセットを選ぶと起床時刻を自動調整）
+  - 寝不足/寝すぎ/連続達成/ぴったり睡眠などの判定は、すべてこの目標値を基準に計算
+  - 就寝・起床とも目標の20分以内に収まると「目標達成」の専用セリフが出現
+  - 「昨夜の睡眠」カードに目標との差分（例: 目標より15分短い）と、眠りのダイヤルに目標時間帯の参考線を表示
+
+## 技術構成
+
+- React + Vite
+- [lucide-react](https://lucide.dev/) アイコン
+- データは `localStorage` に保存（`src/lib/storage.js`）。サーバーは不要です
+
+## セットアップ
+
+```bash
+npm install
+npm run dev
+```
+
+ブラウザで `http://localhost:5173` を開いてください。
+
+## ビルド
+
+```bash
+npm run build
+npm run preview
+```
+
+`dist/` に静的ファイルが出力されます。Vercel / Netlify / GitHub Pages などにそのままデプロイ可能です。
+
+## ディレクトリ構成
+
+```
+├── index.html
+├── package.json
+├── vite.config.js
+├── public
+│   ├── manifest.json
+│   ├── apple-touch-icon.png
+│   ├── icon-192.png / icon-512.png
+│   └── favicon-32.png
+└── src
+    ├── main.jsx        # エントリーポイント
+    ├── App.jsx          # アプリ本体
+    └── lib
+        └── storage.js   # localStorage ラッパー
+```
+
+## iPhoneでの使い方
+
+Safariでデプロイ先のURLを開き、共有ボタン →「ホーム画面に追加」を選ぶと、アイコン付きのアプリのように起動できます（ステータスバー・ノッチ・ホームインジケーターの余白にも対応済みです）。
+
+- `npm run dev` で表示される `localhost` のURLは**自分のPCの中でしか開けません**。iPhoneの実機で試すには、Vercel/Netlify/GitHub PagesなどにデプロイしてそのURLをiPhoneのSafariで開いてください。
+- `index.html` ファイルを直接ダブルクリックして開くと真っ白になります（ブラウザで開く場合は必ず `npm run dev` または `npm run build` → `npm run preview` を使ってください）。
+
+## iPhone向けの最適化内容
+
+- ホーム画面追加時にアイコン・アプリ名が表示されるよう `manifest.json` と `apple-touch-icon` を追加
+- ノッチ・ホームインジケーターの領域にコンテンツが被らないよう `env(safe-area-inset-*)` で余白を確保
+- 入力欄はすべてフォントサイズ16px以上にし、フォーカス時にSafariが自動ズームしてしまう不具合を回避
+- `100dvh` を使用し、Safariのアドレスバー表示/非表示による高さのガタつきを防止
+- タップ時のハイライト色を無効化し、ボタンの `touch-action: manipulation` でタップの反応を高速化
+
+## カスタマイズ
+
+- キャラクターの名前・口調・カラーは `App.jsx` 内の `CHARS` / `CHAR_LINES` を編集してください
+- 隠しイベントの発生条件は `computeSleepState` 関数内にまとまっています
+- 目標睡眠時間の初期値は `App.jsx` 内の `DEFAULT_SETTINGS`（就寝23:30・起床07:00）を編集してください
+

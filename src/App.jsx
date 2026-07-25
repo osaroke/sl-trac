@@ -23,7 +23,7 @@ const TAGS = ['カフェイン', '飲酒', '運動', '昼寝', 'ストレス', '
 const QLABELS = ['最悪', 'いまいち', 'ふつう', '良い', '最高'];
 
 const CHARS = [
-  { id: 'himari', name: 'スピカ', color: '#F2895C', icon: Sparkles },
+  { id: 'himari', name: 'すぴか', color: '#F2895C', icon: Sparkles },
   { id: 'rui', name: 'こと', color: '#9B7FD1', icon: Cat },
   { id: 'touko', name: 'すばる', color: '#6FA3D8', icon: Snowflake },
   { id: 'yuki', name: 'こぐま', color: '#E39CB8', icon: Flower2 },
@@ -499,7 +499,7 @@ function EntryEditor({ entry, onSave, onDelete }) {
           rows={2}
           style={{
             width: '100%', background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 10,
-            color: C.text, fontFamily: bodyFont, fontSize: 13, padding: 8, resize: 'none', boxSizing: 'border-box',
+            color: C.text, fontFamily: bodyFont, fontSize: 16, padding: 8, resize: 'none', boxSizing: 'border-box',
           }}
         />
       </div>
@@ -674,7 +674,7 @@ function Field({ label, children }) {
 
 const inputStyle = {
   width: '100%', background: C.surface2, border: `1px solid ${C.line}`, borderRadius: 10,
-  color: C.text, fontFamily: bodyFont, fontSize: 14, padding: '9px 10px', boxSizing: 'border-box',
+  color: C.text, fontFamily: bodyFont, fontSize: 16, padding: '9px 10px', boxSizing: 'border-box',
 };
 
 function ModalShell({ title, onClose, children }) {
@@ -685,7 +685,7 @@ function ModalShell({ title, onClose, children }) {
     }}>
       <div style={{
         width: '100%', maxWidth: 430, background: C.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24,
-        padding: '20px 20px 28px', boxSizing: 'border-box', maxHeight: '86vh', overflowY: 'auto',
+        padding: '20px 20px calc(28px + env(safe-area-inset-bottom))', boxSizing: 'border-box', maxHeight: '86dvh', overflowY: 'auto',
         border: `1px solid ${C.line}`, borderBottom: 'none',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
@@ -864,23 +864,27 @@ export default function SleepApp() {
 
   if (loading) {
     return (
-      <div style={{ background: C.bg, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.muted, fontFamily: bodyFont }}>
+      <div style={{ background: C.bg, minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: C.muted, fontFamily: bodyFont }}>
         読み込み中…
       </div>
     );
   }
 
   return (
-    <div style={{ background: C.bg, minHeight: '100vh', color: C.text, fontFamily: bodyFont }}>
+    <div style={{ background: C.bg, minHeight: '100dvh', color: C.text, fontFamily: bodyFont }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
         @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { -webkit-text-size-adjust: 100%; }
+        button { touch-action: manipulation; }
+        input, textarea { -webkit-appearance: none; appearance: none; }
       `}</style>
       <div style={{
-        maxWidth: 430, margin: '0 auto', padding: '28px 20px 40px', position: 'relative',
+        maxWidth: 430, margin: '0 auto', position: 'relative',
+        padding: 'calc(28px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(40px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left))',
         backgroundImage: 'radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,0.25) 1px, transparent 0), radial-gradient(1px 1px at 70% 8%, rgba(255,255,255,0.18) 1px, transparent 0), radial-gradient(1.5px 1.5px at 85% 22%, rgba(255,255,255,0.2) 1px, transparent 0), radial-gradient(1px 1px at 40% 4%, rgba(255,255,255,0.15) 1px, transparent 0)',
-        backgroundRepeat: 'no-repeat', minHeight: '100vh',
+        backgroundRepeat: 'no-repeat', minHeight: '100dvh',
       }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
           <div>
